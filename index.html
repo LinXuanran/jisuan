@@ -1,0 +1,281 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>Amaze UI Examples</title>
+
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="icon" type="image/png" href="assets/i/favicon.png">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="assets/i/app-icon72x72@2x.png">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+    <meta name="msapplication-TileColor" content="#0e90d2">
+
+    <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
+    <!--
+    <link rel="canonical" href="http://www.example.com/">
+    -->
+
+    <link rel="stylesheet" href="assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+<div class="am-g" id="app">
+    <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+        <form class="am-form">
+            <fieldset>
+                <legend>混凝土位移系数和反力系数</legend>
+
+                <div class="am-form-group">
+                    <label for="Hu">Hu</label>
+                    <input type="number" class="" id="Hu" v-model="Hu" placeholder="输入Hu">
+                </div>
+                <div class="am-form-group">
+                    <label for="Hu">H</label>
+                    <input type="number" class="" id="H" v-model="H" placeholder="输入H">
+                </div>
+                <div class="am-form-group">
+                    <label for="Iu">Iu</label>
+                    <input type="number" class="" id="Iu" v-model="Iu" placeholder="输入Iu ">
+                </div>
+                <div class="am-form-group">
+                    <label for="Il">Il</label>
+                    <input type="number" class="" id="Il" v-model="Il" placeholder="输入Il">
+                </div>
+                <div class="am-form-group">
+                    <label for="jd">ꭤ</label>
+                    <input type="number" class="" id="jd" v-model="jd" placeholder="输入ꭤ">
+                </div>
+                <div class="am-form-group">
+                    <label for="b">b</label>
+                    <input type="number" class="" id="b" v-model="b" placeholder="输入b">
+                </div>
+
+                <div class="am-form-group">
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C1" v-model="checkName"> C1
+                    </label>
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C2" v-model="checkName"> C2
+                    </label>
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C3" v-model="checkName"> C3
+                    </label>
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C4" v-model="checkName"> C4
+                    </label>
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C5" v-model="checkName"> C5
+                    </label>
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C6" v-model="checkName"> C6
+                    </label>
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C7" v-model="checkName"> C7
+                    </label>
+                    <label class="am-checkbox-inline">
+                        <input type="checkbox" value="C8" v-model="checkName"> C8
+                    </label><label class="am-checkbox-inline">
+                    <input type="checkbox" value="C9" v-model="checkName"> C9
+                </label>
+
+                </div>
+
+
+            </fieldset>
+        </form>
+    </div>
+    <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+        <table class="am-table">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>R</th>
+                <th>C值</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in result">
+                <td>{{item.id}}</td>
+                <td>{{item.R}}</td>
+                <td>{{item.C}}</td>
+            </tr>
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="assets/js/vue.js"></script>
+<script src="assets/js/amazeui.min.js"></script>
+<script>
+    const formula = {
+        C1: (v, n, jd, b) => 1.5 * (1 - v * v * (1 - 1 / n)) / (1 + v * v * v * (1 / n - 1)),
+        C2: (v, n, jd, b) => 1.5 * (1 - v * v * ((1 - jd * jd) / n - 1)) / (1 + v * v * v * (1 / n - 1)),
+        C3: (v, n, jd, b) => 1.5 * (1 - v * v) / (1 + v * v * v * (1 / n - 1)),
+        C4: (v, n, jd, b) => 1.5 * (2 * b * (1 - v) - b * b * (1 - v) * (1 - v)) / (1 + Math.pow(v, 3) * (1 / n - 1)),
+        C5: (v, n, jd, b) => (2 - 3 * jd * v + Math.pow(v, 3) * ((2 + jd) * (1 - jd) * (1 - jd) / n - (2 - 3 * jd))) / (2 * (1 + Math.pow(v, 3) * (1 / n - 1))),
+        C6: (v, n, jd, b) => b * b * (1 - v) * (1 - v) * (3 - b * (1 - v)) / (2 * (1 + Math.pow(v, 3) * (1 / n - 1))),
+        C7: (v, n, jd, b) => (Math.pow(jd * v, 4) / n - (1 / n - 1) * (6 * jd - 8) * jd * Math.pow(v, 4) - jd * v * (6 * jd * v - 8)) / (8 * (1 + Math.pow(v, 3) * (1 / n - 1))),
+        C8: (v, n, jd, b) => (3 - Math.pow(b * (1 - v), 3) * (4 - b * (1 - v) + 3 * Math.pow(v, 4) * (1 / n - 1))) / (8 * (1 + Math.pow(v, 3) * (1 / n - 1))),
+        C9: (v, n, jd, b) => 3 * (1 + Math.pow(v, 4) * (1 / n - 1)) / (8 * (1 + Math.pow(v, 3) * (1 / n - 1)))
+
+    }
+    var app = new Vue({
+            el: '#app',
+            data: {
+                Hu: '',
+                H: '',
+                Iu: '',
+                Il: '',
+                jd: '',
+                b: '',
+                checkName: []
+            },
+
+            computed: {
+                result: (
+                    {
+                        Hu,
+                        H,
+                        Iu,
+                        Il,
+                        jd,
+                        b,
+                        checkName
+                    }
+                ) => {
+                    const v = new Number(Hu / H);
+                    const n = new Number(Iu / Il);
+
+                    const keyOfFormula = Object.keys(formula);
+                    return (checkName || []).filter(id => keyOfFormula.includes(id))
+                        .map(id => (
+                                {
+                                    id:  id,
+                                    C: +formula[id](v, n, +jd, +b).toFixed(4),
+                                    R: 0
+                                }
+                            )
+                        );
+                }
+            }
+
+
+            /* ,
+             watch: {
+                 checkName: function () {
+                     const keep = count => num => +num.toFixed(count);
+                     const v = keep(3)(this.Hu / this.H);
+                     const n = keep(3)(this.Hu / this.H);
+                     const jd = keep(3)(this.jd);
+                     const b = keep(3)(this.b);
+                     const temp = [];
+
+            /!*         var v = this.Hu / this.H;
+                     var n = this.Iu / this.Il;
+
+                     n=new Number(n);
+                     v=new Number(v);
+                      var b = this.b;
+                     var jd = new Number(this.jd);*!/
+
+
+
+                     for (var i in this.checkName) {
+                         var value = this.checkName[i];
+                         if (value == 'C1') {
+                             var C = 1.5 * (1 - v * v * (1 - 1 / n)) / (1 + v * v * v * (1 / n - 1));
+                             C = C.toFixed(4)
+                             t = {'id':"C1",'C': C, "R": 0}
+                             temp.push(t)
+
+                         }
+                         if (value == 'C2') {
+                             var C = 1.5 * (1 - v * v * ((1 - jd * jd) / n - 1)) / (1 + v * v * v * (1 / n - 1));
+                             C = C.toFixed(4)
+                             t = {'id':"C2",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                         if (value == 'C3') {
+                             var C = 1.5 * (1 - v * v) / (1 + v * v * v * (1 / n - 1));
+                             C = C.toFixed(4)
+                             t = {'id':"C3",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                         if (value == 'C4') {
+                             var C = 1.5 * (2 * b * (1 - v) - b * b*(1 - v) * (1 - v)) / (1 + Math.pow(v,3)* (1 / n - 1));
+                             C = C.toFixed(4)
+                             t = {'id':"C4",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                         if (value == 'C5') {
+
+                             var fr=(2+jd)*(1-jd)*(1-jd)/n-(2-3*jd);
+
+                             var C = (2-3*jd*v+Math.pow(v,3)*fr)/(2*(1+Math.pow(v,3)*(1/n-1)));
+                             C = C.toFixed(4)
+                             t = {'id':"C5",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                         if (value == 'C6') {
+
+                             var C = b*b*(1-v)*(1-v)*(3-b*(1-v))/(2*(1+Math.pow(v,3)*(1/n-1)));
+                             C = C.toFixed(4)
+                             t = {'id':"C6",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                         if (value == 'C7') {
+
+                             var C = (Math.pow(jd*v,4)/n-(1/n-1)*(6*jd-8)*jd*Math.pow(v,4)-jd*v*(6*jd*v-8))/(8*(1+Math.pow(v,3)*(1/n-1)));
+                             C = C.toFixed(4)
+                             t = {'id':"C7",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                         if (value == 'C8') {
+
+                             var C = (3-Math.pow(b*(1-v),3)*(4-b*(1-v)+3*Math.pow(v,4)*(1/n-1)))/(8*(1+Math.pow(v,3)*(1/n-1)));
+                             C = C.toFixed(4)
+                             t = {'id':"C8",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                         if (value == 'C9') {
+
+                             var C = 3*(1+Math.pow(v,4)*(1/n-1))/(8*(1+Math.pow(v,3)*(1/n-1)));
+                             C = C.toFixed(4)
+                             t = {'id':"C9",'C': C, "R": 0}
+                             temp.push(t)
+                         }
+                     }
+                     this.result=temp;
+                 }
+             }*/
+
+        }
+    )
+
+
+</script>
+</body>
+</html>
